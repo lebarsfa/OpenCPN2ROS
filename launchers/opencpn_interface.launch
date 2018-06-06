@@ -9,5 +9,5 @@
     <param name="baud" value="4800" />
     <param name="protocols" value="$GPGGA,$GPHDT" />
   </node>
-  <node pkg="opencpn2ros" type="opencpn2ros" name="opencpn2ros"/>
+  <node pkg="opencpn2ros" type="opencpn2ros.py" name="opencpn2ros"/>
 </launch>
