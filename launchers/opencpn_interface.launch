@@ -10,4 +10,7 @@
     <param name="protocols" value="$GPGGA,$GPHDT" />
   </node>
   <node pkg="opencpn2ros" type="opencpn2ros.py" name="opencpn2ros"/>
+  <node pkg="opencpn2ros" type="ros2opencpn.py" name="ros2opencpn">
+    <param name="rate" value="2" />
+  </node>
 </launch>
