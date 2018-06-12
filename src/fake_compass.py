@@ -52,19 +52,9 @@ class FakeCompass:
     def sendGPHDT(self):
         if self.cur_heading == None:
             return
-        # yaw = -rad2deg(getYaw(self.cur_pose))+90
-        yaw = self.cur_heading
+        yaw = self.cur_heading.data
         msg_comp = "HCHDT," + str(yaw) + ",T"
         self.sendSentence(msg_comp)
-
-        # msg_comp = "GPRMC," + time + ",A," + "{0:08.3f}".format(degToNmea(lat)) + "," + latH(lat) + "," + "{0:09.3f}".format(degToNmea(lon)) + "," + lonH(lon) + "," + "0," + str(yaw) + ",230518,003.1,W"
-        # self.sendSentence(msg_comp)
-        # msg_comp = "GPHDM," + str(yaw) + ",T"
-        # self.sendSentence(msg_comp)
-        # msg_comp = "GPHSC," + str(yaw) + ",T,"+ str(yaw) + ",M  "
-        # self.sendSentence(msg_comp)
-        # msg_comp = "HCHDG," + str(yaw) + ",,,7.1,W "
-        # self.sendSentence(msg_comp)
 
     def sendSentence(self, msg):
         sentence = Sentence()
