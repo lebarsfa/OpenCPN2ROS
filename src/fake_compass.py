@@ -6,7 +6,6 @@
 
 import rospy
 from std_msgs.msg import Float64
-from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import PoseStamped, Pose, Twist, Quaternion, TwistStamped
 from math import floor
 from nmea_msgs.msg import Sentence
@@ -29,23 +28,6 @@ def getYaw(pose):
     roll, pitch, yaw = tf.transformations.euler_from_quaternion(quaternionMsgToQuaternion(pose.pose.orientation))
     return yaw
 
-def nmeaToDeg(nmeaNro):
-    return floor(nmeaNro/100.) + (nmeaNro/100.-floor(nmeaNro/100.))*100/60
-
-def degToNmea(deg):
-    deg = abs(deg)
-    return floor(deg)*100. + (deg - floor(deg))*60
-
-def latH(lat):
-    if lat<0:
-        return "S"
-    return "N"
-
-def lonH(lon):
-    if lon<0:
-        return "W"
-    return "E"
-
 def checksum(msg):
     return str(hex(reduce((lambda a,b : a^b), map(ord, msg))))[2:]
 
@@ -57,37 +39,22 @@ def secsToNmeaTime(secs):
     secs -= minutes*60
     return "{0:02}{1:02}{2:02}".format(int(hours), int(minutes), int(floor(secs)))
 
-class ROS2OpenCPN:
+class FakeCompass:
     def __init__(self):
-        rospy.Subscriber('fix', NavSatFix, self.cb_fix, queue_size=10000)
         rospy.Subscriber('boat_heading', Float64, self.cb_heading, queue_size=10000)
         self.pub_nmea = rospy.Publisher('nmea_sentence', Sentence, queue_size=10000)
         self.rate = rospy.Rate(rospy.get_param('~rate', 3))
-        self.cur_fix = None
         self.cur_heading = None
-
-    def cb_fix(self, fix_msg):
-        self.cur_fix = fix_msg
 
     def cb_heading(self, heading_msg):
         self.cur_heading = heading_msg
-
-    def sendGPGGA(self):
-        if self.cur_fix == None:
-            return
-        timeInSecs = self.cur_fix.header.stamp.to_sec()
-        time = secsToNmeaTime(timeInSecs)
-        lat, lon, alt = self.cur_fix.latitude, self.cur_fix.longitude, self.cur_fix.altitude
-        print "time: ", time, ", sec: ",timeInSecs
-        msg_comp = "GPGGA," + time + "," + "{0:08.3f}".format(degToNmea(lat)) + "," + latH(lat) + "," + "{0:09.3f}".format(degToNmea(lon)) + "," + lonH(lon) + "," + "4,10,0," + str(alt) + ",M," + str(alt) + ",M,,"
-        self.sendSentence(msg_comp)
 
     def sendGPHDT(self):
         if self.cur_heading == None:
             return
         # yaw = -rad2deg(getYaw(self.cur_pose))+90
         yaw = self.cur_heading
-        msg_comp = "GPHDT," + str(yaw) + ",T"
+        msg_comp = "HCHDT," + str(yaw) + ",T"
         self.sendSentence(msg_comp)
 
         # msg_comp = "GPRMC," + time + ",A," + "{0:08.3f}".format(degToNmea(lat)) + "," + latH(lat) + "," + "{0:09.3f}".format(degToNmea(lon)) + "," + lonH(lon) + "," + "0," + str(yaw) + ",230518,003.1,W"
@@ -107,10 +74,9 @@ class ROS2OpenCPN:
 
     def run(self):
         while not rospy.is_shutdown():
-            self.sendGPGGA()
             self.sendGPHDT()
             self.rate.sleep()
 
 if __name__ == '__main__':
-    rospy.init_node('ros2opencpn')
-    ROS2OpenCPN().run()
+    rospy.init_node('fake_compass')
+    FakeCompass().run()

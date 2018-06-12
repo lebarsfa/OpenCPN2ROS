@@ -3,15 +3,22 @@
     <param name="port" value="/dev/ttyVUSB1" />
     <param name="baud" value="4800" />
   </node>
-
   <node pkg="opencpn2ros" type="nmea_topic_virtual_serial_writer" name="nmea_topic_virtual_serial_writer">
     <param name="port" value="/dev/ttyVUSB2" />
     <param name="baud" value="4800" />
-    <param name="protocols" value="$GPGGA,$GPHDT" />
+    <!-- <param name="protocols" value="$GPGGA,$GPHDT" /> -->
   </node>
+
+  <node pkg="opencpn2ros" type="fake_gps.py" name="fake_gps">
+    <param name="rate" value="1" />
+  </node>
+  <node pkg="opencpn2ros" type="fake_compass.py" name="fake_compass">
+    <param name="rate" value="1" />
+  </node>
+  <node pkg="opencpn2ros" type="fake_sounder.py" name="fake_sounder">
+    <param name="rate" value="1" />
+  </node>
+
   <!-- <node pkg="opencpn2ros" type="opencpn2ros.py" name="opencpn2ros"/> -->
-  <node pkg="opencpn2ros" type="ros2opencpn.py" name="ros2opencpn">
-    <param name="rate" value="2" />
-  </node>
   <node pkg="opencpn2ros" type="waypointListInterface" name="waypointListInterface" output="screen" />
 </launch>

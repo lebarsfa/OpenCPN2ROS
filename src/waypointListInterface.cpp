@@ -100,8 +100,7 @@ public:
 
     std::string ns = ros::this_node::getNamespace();
 
-    sub1 = n.subscribe("nmea_sentence", 1000000, &ZodiacAutonomous::nmeaSentenceCallback, this);
-    pub1 = n.advertise<nmea_msgs::Sentence>("nmea_sentence",1000);
+    sub1 = n.subscribe("nmea_sentence_opencpn", 1000, &ZodiacAutonomous::nmeaSentenceCallback, this);
     pub2 = n.advertise<zodiac_command::WaypointListMission>("new_waypoint_mission",1000,true);
   }
 
@@ -137,7 +136,7 @@ public:
       }
     }
     else if(sentence_msg.sentence != ""){
-      ROS_WARN("NMEA waypoint message recived twice");
+      ROS_WARN("NMEA waypoint message received twice");
     }
 
     previousSentence = sentence_msg.sentence;
@@ -163,52 +162,16 @@ public:
     pub2.publish(waypoint_msg);
   }
 
-  //Just keeping these fucntions around in case of nmea messages directly from GPS do not work.
-  // ToDo
-  void publishBoatPose()
-  {
-    nmea_msgs::Sentence msg;
-    msg.header.stamp = ros::Time::now();
-
-    std::stringstream ss;
-    ss << "GPGGA,"; //<< time << "," << "{0:08.3f}".format(degToNmea(lat)) << "," << latH(lat) << "," << "{0:09.3f}".format(degToNmea(lon)) << "," << lonH(lon) << "," << "4,10,0," << str(self.cur_pose.pose.position.z) << ",M," << str(self.cur_pose.pose.position.z) << ",M,,";
-    msg.sentence = packMessage(ss.str());
-    //msg.sentence = packMessage("GPGGA,123519,4807.038,N,01131.000,W,1,10,0.9,545.4,M,46.9,M,,");
-
-    pub1.publish(msg);
-  }
-
-
-  // Publish Boat true heading
-       // msg_comp = "GPHDT," + str(yaw) + ",T"
-
-
-  string packMessage(string message)
-  {
-    std::stringstream msg_final;
-    msg_final << "$" << message << "*" << std::hex << (checksum(message.c_str()) & 255);
-    return msg_final.str();
-  }
-
-  int checksum(const char *str)
-  {
-    int i = 0, ret = 0;
-
-    while(str[i])
-      ret ^= str[i++];
-
-    return ret;
-  }
-
 private:
   ros::NodeHandle n;
   ros::Subscriber sub1;
-  ros::Publisher pub1, pub2;
+  ros::Publisher pub2;
   vector<NMEA_WPL> pts;
   vector<NMEA_RTE> rte;
   bool loaded;
   string previousSentence; // in order to check if the NMEA sentence was recived twice.
 };
+
 
 int main(int argc, char** argv)
 {
@@ -216,12 +179,7 @@ int main(int argc, char** argv)
 
   ZodiacAutonomous mZodiacAutonomous;
 
-  ros::Rate rate(1);
-  while(rate.sleep())
-  {
-    //mZodiacAutonomous.publishBoatPose();
-    ros::spinOnce();
-  }
+  ros::spin();
 
-    return 0;
+  return 0;
 }
