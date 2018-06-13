@@ -8,6 +8,8 @@ import rospy
 from std_msgs.msg import Float64
 from nmea_msgs.msg import Sentence
 
+def checksum(msg):
+    return str(hex(reduce((lambda a,b : a^b), map(ord, msg))))[2:]
 
 class FakeSounder:
     def __init__(self):
@@ -25,7 +27,7 @@ class FakeSounder:
         depth = self.cur_depth  # in meters
         depth_feet = 3.280839895 * depth
         depth_fathoms = 0.5464480874 * depth
-        msg_comp = "SDDBT," + str(depth_feet) + ",f" + str(depth) + ",M" + str(depth_fathoms) + ",F"
+        msg_comp = "SDDBT," + str(depth_feet) + ",f," + str(depth) + ",M," + str(depth_fathoms) + ",F"
         self.sendSentence(msg_comp)
 
     def sendSentence(self, msg):
