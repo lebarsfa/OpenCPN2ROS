@@ -1,4 +1,4 @@
 #!/bin/bash
 
-pkill socat
+sudo pkill socat
 echo "Port closed"

@@ -6,9 +6,9 @@ socat -d -d -d -d PTY,raw,echo=0,link=/dev/ttyVUSB0  PTY,raw,echo=0,link=/dev/tt
 socat -d -d -d -d PTY,raw,echo=0,link=/dev/ttyVUSB2  PTY,raw,echo=0,link=/dev/ttyVUSB3 >& /dev/null &
 
 sleep 5
-chmod 777 /dev/ttyVUSB0
-chmod 777 /dev/ttyVUSB1
-chmod 777 /dev/ttyVUSB2
-chmod 777 /dev/ttyVUSB3
+sudo chmod 777 /dev/ttyVUSB0
+sudo chmod 777 /dev/ttyVUSB1
+sudo chmod 777 /dev/ttyVUSB2
+sudo chmod 777 /dev/ttyVUSB3
 
 echo "Port ready"
