@@ -54,7 +54,7 @@ def lonH(lon):
     return "E"
 
 def checksum(msg):
-    return str(hex(reduce((lambda a,b : a^b), map(ord, msg))))[2:]
+    return "{0:0{1}X}".format(reduce((lambda a,b : a^b), map(ord, msg)),2)
 
 def secsToNmeaTime(secs):
     hours = floor(secs/3600)

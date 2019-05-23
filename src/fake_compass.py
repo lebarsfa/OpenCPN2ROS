@@ -29,7 +29,7 @@ def getYaw(pose):
     return yaw
 
 def checksum(msg):
-    return str(hex(reduce((lambda a,b : a^b), map(ord, msg))))[2:]
+    return "{0:0{1}X}".format(reduce((lambda a,b : a^b), map(ord, msg)),2)
 
 def secsToNmeaTime(secs):
     hours = floor(secs/3600)
@@ -49,7 +49,7 @@ class FakeCompass:
     def cb_heading(self, heading_msg):
         self.cur_heading = heading_msg
 
-    def sendGPHDT(self):
+    def sendHCHDT(self):
         if self.cur_heading == None:
             return
         yaw = self.cur_heading.data
@@ -64,7 +64,7 @@ class FakeCompass:
 
     def run(self):
         while not rospy.is_shutdown():
-            self.sendGPHDT()
+            self.sendHCHDT()
             self.rate.sleep()
 
 if __name__ == '__main__':

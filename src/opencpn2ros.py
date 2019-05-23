@@ -30,8 +30,7 @@ def degToNmea(deg):
     return floor(deg)*100. + (deg - floor(deg))*60
 
 def checksum(msg):
-    return str(hex(reduce((lambda a,b : a^b), map(ord, msg))))[2:].upper()
-
+    return "{0:0{1}X}".format(reduce((lambda a,b : a^b), map(ord, msg)),2)
 
 class NMEA_WPL:
     def __init__(self, datastring):

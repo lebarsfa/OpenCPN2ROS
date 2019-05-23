@@ -109,7 +109,7 @@ public:
     // Test if it was sending twice
     if (sentence_msg.sentence != previousSentence)
     {
-      cout << "NMEA recived : " << sentence_msg.sentence << endl;
+      cout << "NMEA received : " << sentence_msg.sentence << endl;
 
       std::stringstream parts(sentence_msg.sentence);
       string part;

@@ -9,14 +9,12 @@ import serial
 import rospy
 from nmea_msgs.msg import Sentence
 
-
 def nmeaSentenceCallback(data):
     global GPS
     if data.sentence != "":
         if (data.sentence.split(",")[0] in protocols) or protocols[0] == "":
             print("Sending: " + data.sentence)
-            GPS.writelines(data.sentence + "\n")
-
+            GPS.write(data.sentence + "\r\n") # nmea_sentence is supposed to be stripped...
 
 if __name__ == '__main__':
     rospy.init_node('nmea_topic_virtual_serial_writer')
