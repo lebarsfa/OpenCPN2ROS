@@ -11,6 +11,7 @@ from nmea_msgs.msg import Sentence
 
 def nmeaSentenceCallback(data):
     global GPS
+    global protocols
     if data.sentence != "":
         if (data.sentence.split(",")[0] in protocols) or protocols[0] == "":
             print("Sending: " + data.sentence)
