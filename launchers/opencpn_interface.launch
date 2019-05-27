@@ -10,19 +10,19 @@
     <!-- <param name="protocols" value="$GPGGA,$GPHDT" /> -->
   </node>
 
-  <node pkg="opencpn2ros" type="fake_gps.py" name="fake_gps">
+  <node pkg="opencpn2ros" type="fake_gps.py" name="fake_gps" respawn="true" respawn_delay="2">
     <param name="rate" value="1" />
   </node>
-  <node pkg="opencpn2ros" type="fake_compass.py" name="fake_compass">
+  <node pkg="opencpn2ros" type="fake_compass.py" name="fake_compass" respawn="true" respawn_delay="2">
     <param name="rate" value="1" />
   </node>
-  <node pkg="opencpn2ros" type="fake_sounder.py" name="fake_sounder">
+  <node pkg="opencpn2ros" type="fake_sounder.py" name="fake_sounder" respawn="true" respawn_delay="2">
     <param name="rate" value="1" />
   </node>
-  <node pkg="opencpn2ros" type="fake_rudder.py" name="fake_rudder">
+  <node pkg="opencpn2ros" type="fake_rudder.py" name="fake_rudder" respawn="true" respawn_delay="2">
     <param name="rate" value="1" />
   </node>
 
   <!-- <node pkg="opencpn2ros" type="opencpn2ros.py" name="opencpn2ros"/> -->
-  <node pkg="opencpn2ros" type="waypointListInterface" name="waypointListInterface" output="screen" />
+  <node pkg="opencpn2ros" type="waypointListInterface" name="waypointListInterface" output="screen" respawn="true" respawn_delay="2" />
 </launch>
